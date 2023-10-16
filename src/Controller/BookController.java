@@ -12,7 +12,7 @@ public class BookController {
     public void bookController() throws IOException {
         System.out.println("Add Book");
         addBook();
-        }
+    }
     private void addBook() throws IOException {
         String bookId = RandomStringUtils.randomAlphanumeric(8);
         System.out.print("Enter Book Name");
