@@ -4,10 +4,7 @@ import DataBaseConnection.ConnectionManagement;
 import Model.bookModel;
 import Model.issuedModel;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import java.sql.*;
 
 public class issuedDao {
     private static final Connection connection;
@@ -54,7 +51,7 @@ public class issuedDao {
         return bookModel;
     }
     public static void updateToDb(issuedModel issuedModel) throws SQLException {
-        String query = "INSERT INTO issued(issueId, issuedToId, issuedToName, issuedBook, issuedBookName, issuedDate, fineAmount) values(?,?,?,?,?,?,?)";
+        String query = "INSERT INTO issued(issueId, issuedToId, issuedToName, issuedBook, issuedBookName, issuedDate, fineAmount, returnBy) values(?,?,?,?,?,?,?,?)";
         PreparedStatement preparedStatement = connection.prepareStatement(query);
         preparedStatement.setString(1, issuedModel.getIssueId());
         preparedStatement.setString(2, issuedModel.getIssuedToId());
@@ -63,29 +60,64 @@ public class issuedDao {
         preparedStatement.setString(5, issuedModel.getIssuedBookName());
         preparedStatement.setDate(6, issuedModel.getIssuedDate());
         preparedStatement.setDouble(7, issuedModel.getFineAmount());
+        preparedStatement.setDate(8, issuedModel.getReturnBy());
 
         preparedStatement.executeUpdate();
     }
-}
+    public static void bookQuantityAfterIssuing(bookModel bookItem) {
+        int newQuantity = 0;
+        try {
+            String query = "UPDATE books SET bookQuantity=? where bookId=?";
+           // System.out.println(bookItem.getQuantity());
+            System.out.println(bookItem.getBookId());
+            PreparedStatement preparedStatement = connection.prepareStatement(query);
+            preparedStatement.setInt(1, bookItem.getQuantity());
+            preparedStatement.setString(2, bookItem.getBookId());
+            preparedStatement.executeUpdate();
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
 
-    /*try {
+    public static void getIssueDetails(issuedModel issueItem) {
+        try {
+            String query = "Select * from issued where issueId=?";
+            PreparedStatement preparedStatement = connection.prepareStatement(query);
+            preparedStatement.setString(1, issueItem.getIssueId());
+            ResultSet resultSet = preparedStatement.executeQuery();
+            /*Date date = null;
+            String issuedName = null;*/
+            Date date = null;
+            /*String issuedToName = null;
+            String issuedToId = null;
+            String issuedBook = null;*/
+            while (resultSet.next()) {
+                date = resultSet.getDate("issuedDate");
+               /*issuedToName = resultSet.getString("issuedToName");
+                issuedToId = resultSet.getString("issuedToId");
+                issuedBook = resultSet.getString("issuedBook");*/
 
-            // SQL command data stored in String datatype
-            String sql = "select * from cuslogin";
-            p = con.prepareStatement(sql);
-            rs = p.executeQuery();
-
-            // Printing ID, name, email of customers
-            // of the SQL command above
-            System.out.println("id\t\tname\t\temail");
-
-            // Condition check
-            while (rs.next()) {
-
-            int id = rs.getInt("id");
-            String name = rs.getString("name");
-            String email = rs.getString("email");
-            System.out.println(id + "\t\t" + name
-            + "\t\t" + email);
             }
-            }*/
+            issueItem.setIssuedDate(date);
+            /*issueItem.setIssuedToName(issuedToName);
+            issueItem.setIssuedToId(issuedToId);
+            issueItem.setIssuedBookId(issuedBook);*/
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public static void updateFineAmount(issuedModel issuedModel){
+        try {
+            String query = "UPDATE issued set fineAmount=?, returnedOn=?, delayDays=? where issueId=?";
+            PreparedStatement preparedStatement = connection.prepareStatement(query);
+            preparedStatement.setDouble(1, issuedModel.getFineAmount());
+            preparedStatement.setDate(2, issuedModel.getReturnDate());
+            preparedStatement.setLong(3, issuedModel.getDelayDays());
+            preparedStatement.setString(4, issuedModel.getIssueId());
+            preparedStatement.executeUpdate();
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
+}

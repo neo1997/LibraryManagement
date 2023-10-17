@@ -1,7 +1,6 @@
 package Model;
 
 import java.sql.Date;
-import java.time.LocalDate;
 
 public class issuedModel {
     public String getIssueId() {
@@ -70,8 +69,12 @@ public class issuedModel {
                 ", issuedBookName='" + issuedBookName + '\'' +
                 ", issuedDate=" + issuedDate +
                 ", fineAmount=" + fineAmount +
+                ", returnDate=" + returnDate +
+                ", returnBy=" + returnBy +
+                ", delayDays=" + delayDays +
                 '}';
     }
+
     public issuedModel(){
         super();
     }
@@ -89,6 +92,30 @@ public class issuedModel {
         this.fineAmount = fineAmount;
     }
 
+    public Date getReturnDate() {
+        return returnDate;
+    }
+
+    public void setReturnDate(Date returnDate) {
+        this.returnDate = returnDate;
+    }
+
+    public Date getReturnBy() {
+        return returnBy;
+    }
+
+    public void setReturnBy(Date returnBy) {
+        this.returnBy = returnBy;
+    }
+
+    public long getDelayDays() {
+        return delayDays;
+    }
+
+    public void setDelayDays(long delayDays) {
+        this.delayDays = delayDays;
+    }
+
     private String issueId;
     private String issuedToId;
     private String issuedToName;
@@ -96,4 +123,7 @@ public class issuedModel {
     private String issuedBookName;
     private Date issuedDate;
     private double fineAmount;
+    private Date returnDate;
+    private Date returnBy;
+    private long delayDays;
 }

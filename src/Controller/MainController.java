@@ -23,7 +23,7 @@ public class MainController {
                 bookController.bookController();
             } else if (choice == 3){
                 var issuedController = new issuedController();
-                issuedController.issueController();
+                issuedController.issuedController();
             }
         }
     }

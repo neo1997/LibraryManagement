@@ -10,9 +10,9 @@ public class bookModel {
         this.quantity = quantity;
     }
 
-    public bookModel(String bookName, int quantity){
-        bookModel.bookName = bookName;
-        bookModel.quantity = quantity;
+    public bookModel(int quantity, String bookId){
+        this.quantity = quantity;
+        this.bookId = bookId;
     }
 
     public String getBookId() {
@@ -49,6 +49,6 @@ public class bookModel {
     }
 
     private String bookId;
-    private static String bookName;
-    private static int quantity;
+    private String bookName;
+    private int quantity;
 }
